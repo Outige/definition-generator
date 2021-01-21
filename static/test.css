@@ -34,7 +34,7 @@ body {
 
 p {
     color: #0097a7;
-    font-size: 50px;
+    font-size: 30px;
     padding: 0 100px;
 }
 
@@ -58,8 +58,8 @@ h6 {
 
 h5 {
     text-align: left;
-    font-size: 17px;
+    font-size: 19px;
     position: relative;
-    top: -50px;
+    top: 690px;
     color: #696b6e;
 }
