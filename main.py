@@ -1,7 +1,8 @@
 import imgkit
 import pandas as pd 
+import math
 
-def generate_html(tag, source, title, text):
+def generate_html(tag, source, title, text, img_src):
     html='''<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,16 +18,17 @@ def generate_html(tag, source, title, text):
             <h5>%s</h5>
             <div class="inner-inner">
                 <h1 class="title">%s</h1>
+                <img src="%s" alt="">
                 <p>%s</p>
             </div>
         </div>
     </div>
 </body>
 </html>
-    ''' % (tag, source, title, text)
+    ''' % (tag, source, title, img_src, text)
     return html
 
-def generate_css(border_colour, title_colour, text_colour, title_size, text_size):
+def generate_css(border_colour, title_colour, text_colour, title_size, text_size, img_style):
     css = '''
 body {
     padding: 0;
@@ -108,21 +110,46 @@ h5 {
     color: #696b6e;
 }
     '''
+
+    css += '''
+img {
+    width: 250px;
+    height: 250px;
+    %s;
+    
+}
+    ''' % (img_style)
     return css
 
 def generate_definitions(input_csv):
     dataframe = pd.read_csv("in.csv")
     for i in range(len(dataframe)):
-        html = generate_html(dataframe['tag'][i], dataframe['source'][i], dataframe['title'][i], dataframe['text'][i])
+
+        img_src = ''
+        if type(dataframe['image'][i]) in [str]:
+            img_src = 'img/' + dataframe['image'][i]
+        html = generate_html(dataframe['tag'][i], dataframe['source'][i], dataframe['title'][i], dataframe['text'][i], img_src)
         with open('static/tmp.html', 'w') as fp:
             fp.write(html)
+
         title_size = '80px'
         if len(dataframe['title'][i]) > 17:
             title_size = '50px'
+
         text_size = '50px'
         if len(dataframe['text'][i]) > 180:
             text_size = '35px'
-        css = generate_css(dataframe['border_colour'][i], dataframe['title_colour'][i], dataframe['text_colour'][i], title_size, text_size)
+        
+        img_src = ''
+        if type(dataframe['image'][i]) in [str]:
+            img_src = dataframe['image'][i]
+            img_style = '''    float: %s;
+    margin-%s: 20px;
+    margin-top: 20px;'''%(dataframe['image_pos'][i], dataframe['image_pos'][i])
+        else:
+            img_style = 'display: none'
+
+        css = generate_css(dataframe['border_colour'][i], dataframe['title_colour'][i], dataframe['text_colour'][i], title_size, text_size, img_style)
         with open('static/tmp.css', 'w') as fp:
             fp.write(css)
 
