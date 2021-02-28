@@ -32,10 +32,19 @@ body {
     font-size: 80px;
 }
 
-p {
+p.top-paragraph {
     color: #0097a7;
     font-size: 35px;
     padding: 0 100px;
+    display: block;
+    margin-bottom: 0;
+}
+
+p.bottom-paragraph {
+    color: #0097a7;
+    font-size: 35px;
+    padding: 0 100px;
+    margin-top: 0;
 }
 
 h6 {
@@ -65,11 +74,9 @@ h5 {
 }
 
 img {
-
     width: 250px;
     height: 250px;
     float: right;
     margin-right: 20px;
-    margin-top: 20px;
-
+    margin-top: 120px;
 }
