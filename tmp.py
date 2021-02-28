@@ -5,7 +5,7 @@ import math
 import os
 
 def generate_html(html_config):
-    with open('static/templates/auto/template0/index.html', 'r') as fp:
+    with open('static/templates_auto/0/index.html', 'r') as fp:
         template_str = Template(fp.read())
         s = template_str.render(
             html_config=html_config
@@ -13,7 +13,7 @@ def generate_html(html_config):
         return s
 
 def generate_css(css_config):
-    with open('static/templates/auto/template0/main.css', 'r') as fp:
+    with open('static/templates_auto/0/main.css', 'r') as fp:
         template_str = Template(fp.read())
         s = template_str.render(
             css_config=css_config
