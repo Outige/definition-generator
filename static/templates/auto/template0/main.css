@@ -18,7 +18,7 @@ body {
 }
 
 #inner-container {
-    border: 4px solid #0097a7;
+    border: 4px solid {{ css_config.border_colour }};
     background-color: white;
     width: 800px;
     height: 800px;
@@ -28,13 +28,13 @@ body {
 }
 
 .title {
-    color: #696b6e;
-    font-size: 80px;
+    color: {{ css_config.title_colour }};
+    font-size: {{ css_config.title_size }}px;
 }
 
 p {
-    color: #0097a7;
-    font-size: 50px;
+    color: {{ css_config.text_colour }};
+    font-size: {{ css_config.text_size }}px;
     padding: 0 100px;
 }
 
@@ -60,15 +60,18 @@ h5 {
     text-align: left;
     font-size: 19px;
     position: relative;
-    top: 690px;
+    top: 40px;
     color: #696b6e;
 }
 
 img {
+{% if css_config.image == None %}
+    display: none;
+{% else %}
     width: 250px;
     height: 250px;
-    float: right;
-    margin-right: 20px;
+    float: {{css_config.image.position}};
+    margin-{{css_config.image.position}}: 20px;
     margin-top: 20px;
-    
+{% endif %}
 }
