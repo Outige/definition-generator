@@ -154,6 +154,7 @@ def generate_definitions(input_csv):
             fp.write(css)
 
         imgkit.from_file('static/tmp.html', 'out%d.jpg'%(i))
+        # imgkit.from_file('static/templates_design/0/index.html', 'out%d.jpg'%(0))
 
 
 if __name__ == '__main__':
