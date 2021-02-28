@@ -1,7 +1,7 @@
 body {
     padding: 0;
     margin: 0;
-    background-color: white;
+    /* background-color: white; */
     display: block;
     width: 500px;
 }
@@ -11,11 +11,11 @@ body {
     width: 1036px;
     height: 1024px;
     text-align: center;
-    background-color: white;
+    /* background-color: white; */
     margin: 0;
     padding: 0;
     display: inline-block;
-    background-image: linear-gradient(to top left, #c9eef2, white);
+    /* background-image: linear-gradient(to top left, #c9eef2, white); */
     background: url("../../images/profileimg.jpeg") center fixed;
 }
 
@@ -27,10 +27,16 @@ body {
     margin: auto auto;
     position: relative;
     top: 10%;
-    background-image: url("../../images/profileimg.jpeg") center fixed;
+    
+    background: url("../../images/profileimgblur.jpg") center fixed;
+    
+    /* background: rgba(0, 0, 0, 0.2); */
+    
+    /* background-image: url("../../images/profileimg.jpeg") center fixed; */
     /* -webkit-backdrop-filter: blur(10px); */
-    backdrop-filter: blur(10px);
+    /* backdrop-filter: blur(10px); */
     /* filter: blur(8px); */
+    
     /* background-image: linear-gradient(to top left, #c9dddf, white); */
 }
 
