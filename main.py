@@ -68,15 +68,12 @@ def update_css_config(dataframe, index, css_config):
     css_config['inner_gradient_end_colour'] = dataframe['inner_gradient_end_colour'][index]
     css_config['shadow_size'] = dataframe['shadow_size'][index]
     css_config['shadow_rgba'] = dataframe['shadow_rgba'][index]
+    css_config['tag_colour'] = dataframe['tag_colour'][index]
+    css_config['source_colour'] = dataframe['source_colour'][index]
 
-def generate_definitions(csv_path):
-    html_config = {}
-    css_config = {}
-    dataframe = pd.read_csv(csv_path)
-
-    for i in range(len(dataframe)):
-        update_html_config(dataframe, i, html_config)
-        update_css_config(dataframe, i, css_config)
+def generate_definition(dataframe, index, html_config, css_config):
+        update_html_config(dataframe, index, html_config)
+        update_css_config(dataframe, index, css_config)
         html = generate_html(html_config)
         with open('tmp.html', 'w') as fp:
             fp.write(html)
@@ -86,7 +83,10 @@ def generate_definitions(csv_path):
         with open('tmp.css', 'w') as fp:
             fp.write(css)
 
-        imgkit.from_file('tmp.html', f'out{i}.jpg')
+        # FIXME should be jpg?
+        imgkit.from_file('tmp.html', f'out{index}.jpg')
+        OriImage = Image.open(f'out{index}.jpg')
+        OriImage.show()
 
         # clean up
         os.remove('tmp.html')
@@ -95,6 +95,14 @@ def generate_definitions(csv_path):
             os.remove('tmp_inner_image_blur.jpg')
         if os.path.exists('tmp_outer_image_blur.jpg'):
             os.remove('tmp_outer_image_blur.jpg')
+
+def generate_definitions(csv_path):
+    html_config = {}
+    css_config = {}
+    dataframe = pd.read_csv(csv_path)
+
+    for i in range(len(dataframe)):
+        generate_definition(dataframe, i, html_config, css_config)
 
 if __name__ == '__main__':
     generate_definitions("tmp.csv")

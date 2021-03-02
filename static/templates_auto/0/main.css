@@ -49,17 +49,21 @@ p {
     padding: 0 100px;
 }
 
+/* tag */
 h6 {
-    /* display: block;
-    float: right; */
-    position: relative;
-    top: -80px;
-    font-size: 20px;
-    text-align: right;
-    color: #696b6e;
-    /* position: absolute;
-    margin-top: -100px;
-    margin-left: -100px; */
+    {% if css_config.border_width %}
+        position: relative;
+        top: -80px;
+        font-size: 20px;
+        text-align: right;
+        color: {{ css_config.tag_colour }};
+    {% else %}
+        position: relative;
+        top: -30px;
+        font-size: 20px;
+        text-align: right;
+        color: {{ css_config.tag_colour }};
+    {% endif %}
 }
 
 .inner-inner {
@@ -67,12 +71,21 @@ h6 {
     top: -80px;
 }
 
+/* source */
 h5 {
-    text-align: left;
-    font-size: 19px;
-    position: relative;
-    top: 40px;
-    color: #696b6e;
+    {% if css_config.border_width %}
+        text-align: left;
+        font-size: 19px;
+        position: relative;
+        top: 0px;
+        color: {{ css_config.source_colour }};
+    {% else %}
+        text-align: left;
+        font-size: 19px;
+        position: relative;
+        top: 35px;
+        color: {{ css_config.source_colour }};
+    {% endif %}
 }
 
 img {
