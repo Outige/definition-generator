@@ -53,13 +53,13 @@ p {
 h6 {
     {% if css_config.border_width %}
         position: relative;
-        top: -80px;
+        top: {{ -124 - css_config.border_width }}px;
         font-size: 20px;
         text-align: right;
         color: {{ css_config.tag_colour }};
     {% else %}
         position: relative;
-        top: -30px;
+        top: -95px;
         font-size: 20px;
         text-align: right;
         color: {{ css_config.tag_colour }};
@@ -77,13 +77,13 @@ h5 {
         text-align: left;
         font-size: 19px;
         position: relative;
-        top: 0px;
+        top: {{ 766 + css_config.border_width }}px;
         color: {{ css_config.source_colour }};
     {% else %}
         text-align: left;
         font-size: 19px;
         position: relative;
-        top: 35px;
+        top: 800px;
         color: {{ css_config.source_colour }};
     {% endif %}
 }
