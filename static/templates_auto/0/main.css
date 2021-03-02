@@ -67,8 +67,14 @@ h6 {
 }
 
 .inner-inner {
-    position: relative;
-    top: -160px;
+    {% if css_config.border_width %}
+        position: relative;
+        top: -160px;
+    {% else %}
+        position: relative;
+        top: -100px;
+    {% endif %}
+    
 }
 
 /* source */
