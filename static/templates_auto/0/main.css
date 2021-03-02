@@ -29,6 +29,10 @@ body {
     top: 10%;
     background: url( {{ css_config.inner_image }} ) center fixed;
 
+    {% if css_config.shadow_size and css_config.shadow_rgba %}
+    box-shadow: 0px 0px {{ css_config.shadow_size }}px 0px rgba( {{ css_config.shadow_rgba }} );
+    {% endif %}
+
     {% if css_config.inner_gradient_direction and css_config.inner_gradient_start_colour and css_config.inner_gradient_end_colour %}
     background-image: linear-gradient( {{ css_config.inner_gradient_direction }}, {{ css_config.inner_gradient_start_colour }}, {{ css_config.inner_gradient_end_colour }} );
     {% endif %}

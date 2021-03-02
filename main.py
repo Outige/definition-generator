@@ -66,6 +66,8 @@ def update_css_config(dataframe, index, css_config):
     css_config['inner_gradient_direction'] = dataframe['inner_gradient_direction'][index]
     css_config['inner_gradient_start_colour'] = dataframe['inner_gradient_start_colour'][index]
     css_config['inner_gradient_end_colour'] = dataframe['inner_gradient_end_colour'][index]
+    css_config['shadow_size'] = dataframe['shadow_size'][index]
+    css_config['shadow_rgba'] = dataframe['shadow_rgba'][index]
 
 def generate_definitions(csv_path):
     html_config = {}
