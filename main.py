@@ -1,164 +1,98 @@
+from jinja2 import Template
 import imgkit
-import pandas as pd 
+from PIL import Image, ImageFilter
+import pandas as pd
 import math
+import os
 
-def generate_html(tag, source, title, text, img_src):
-    html='''<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.1">
-    <link rel="stylesheet" href="tmp.css">
-    <title>Document</title>
-</head>
-<body>
-    <div class="container">
-        <div id="inner-container">
-            <h6>%s</h6>
-            <h5>%s</h5>
-            <div class="inner-inner">
-                <h1 class="title">%s</h1>
-                <img src="%s" alt="">
-                <p>%s</p>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
-    ''' % (tag, source, title, img_src, text)
-    return html
+def generate_html(html_config):
+    with open('static/templates_auto/0/index.html', 'r') as fp:
+        template_str = Template(fp.read())
+        s = template_str.render(
+            html_config=html_config
+        )
+        return s
 
-def generate_css(border_colour, title_colour, text_colour, title_size, text_size, img_style):
-    css = '''
-body {
-    padding: 0;
-    margin: 0;
-    background-color: white;
-    display: block;
-    width: 500px;
-}
-    '''
+def generate_css(css_config):
+    with open('static/templates_auto/0/main.css', 'r') as fp:
+        template_str = Template(fp.read())
+        s = template_str.render(
+            css_config=css_config
+        )
+        return s
 
-    css += '''
-.container {
-    border: 2px solid rgba(0, 0, 0, 1.0);
-    width: 1036px;
-    height: 1024px;
-    text-align: center;
-    background-color: white;
-    margin: 0;
-    padding: 0;
-    display: inline-block;
-}
-    '''
+def handle_blur(css_config):
+    if css_config.get('inner_image', False) != '#' and css_config.get('inner_image_blur', False):
+        base_image = Image.open(css_config['inner_image'])
+        blur_image = base_image.filter(ImageFilter.GaussianBlur(css_config['inner_image_blur']))
 
-    css += '''
-#inner-container {
-    border: 4px solid %s;
-    background-color: white;
-    width: 800px;
-    height: 800px;
-    margin: auto auto;
-    position: relative;
-    top: 10%c;
-}
-'''%(border_colour, '%')
+        css_config['inner_image'] = 'tmp_inner_image_blur.' + css_config['inner_image'].split('.')[-1]
+        blur_image.save(css_config['inner_image'])
 
-    css += '''
-.title {
-    color: %s;
-    font-size: %s;
-}
-    '''%(title_colour, title_size)
+    if css_config.get('outer_image', False) != '#' and css_config.get('outer_image_blur', False):
+        base_image = Image.open(css_config['outer_image'])
+        blur_image = base_image.filter(ImageFilter.GaussianBlur(css_config['outer_image_blur']))
 
-    css += '''
-p {
-    color: %s;
-    font-size: %s;
-    padding: 0 100px;
-}
-    '''%(text_colour, text_size)
+        css_config['outer_image'] = 'tmp_outer_image_blur.' + css_config['outer_image'].split('.')[-1]
+        blur_image.save(css_config['outer_image'])
 
-    css += '''
-h6 {
-    /* display: block;
-    float: right; */
-    position: relative;
-    top: -80px;
-    font-size: 20px;
-    text-align: right;
-    color: #696b6e;
-    /* position: absolute;
-    margin-top: -100px;
-    margin-left: -100px; */
-}
-    '''
 
-    css += '''
-.inner-inner {
-    position: relative;
-    top: -80px;
-}
-    '''
 
-    css += '''
-h5 {
-    text-align: left;
-    font-size: 19px;
-    position: relative;
-    top: 690px;
-    color: #696b6e;
-}
-    '''
+def update_html_config(dataframe, index, html_config):
+    html_config['text'] = dataframe['text'][index]
+    html_config['image'] = dataframe['image'][index]
+    html_config['title'] = dataframe['title'][index]
+    html_config['source'] = dataframe['source'][index]
+    html_config['tag'] = dataframe['tag'][index]
+    html_config['css'] = 'tmp.css'
 
-    css += '''
-img {
-    width: 250px;
-    height: 250px;
-    %s;
-    
-}
-    ''' % (img_style)
-    return css
+def update_css_config(dataframe, index, css_config):
+    css_config['image_position'] = dataframe['image_position'][index]
+    css_config['text_size'] = 35 # TODO needs to be calculated
+    css_config['title_size'] = 80 # TODO needs to be calculated
+    css_config['border_colour'] = dataframe['border_colour'][index]
+    css_config['border_width'] = dataframe['border_width'][index]
+    css_config['border_radius'] = dataframe['border_radius'][index]
+    css_config['title_colour'] = dataframe['title_colour'][index]
+    css_config['text_colour'] = dataframe['text_colour'][index]
+    css_config['outer_image'] = dataframe['outer_image'][index]
+    if pd.isnull(css_config['outer_image']):
+        css_config['outer_image'] = '#'
+    css_config['outer_image_blur'] = dataframe['outer_image_blur'][index]
+    css_config['inner_image'] = dataframe['inner_image'][index]
+    if pd.isnull(css_config['inner_image']):
+        css_config['inner_image'] = '#'
+    css_config['inner_image_blur'] = dataframe['inner_image_blur'][index]
+    css_config['inner_gradient_direction'] = dataframe['inner_gradient_direction'][index]
+    css_config['inner_gradient_start_colour'] = dataframe['inner_gradient_start_colour'][index]
+    css_config['inner_gradient_end_colour'] = dataframe['inner_gradient_end_colour'][index]
 
-def generate_definitions(input_csv):
-    dataframe = pd.read_csv("in.csv")
+def generate_definitions(csv_path):
+    html_config = {}
+    css_config = {}
+    dataframe = pd.read_csv(csv_path)
+
     for i in range(len(dataframe)):
-
-        img_src = ''
-        if type(dataframe['image'][i]) in [str]:
-            img_src = 'img/' + dataframe['image'][i]
-        html = generate_html(dataframe['tag'][i], dataframe['source'][i], dataframe['title'][i], dataframe['text'][i], img_src)
-        with open('static/tmp.html', 'w') as fp:
+        update_html_config(dataframe, i, html_config)
+        update_css_config(dataframe, i, css_config)
+        html = generate_html(html_config)
+        with open('tmp.html', 'w') as fp:
             fp.write(html)
 
-        title_size = '80px'
-        if len(dataframe['title'][i]) > 17:
-            title_size = '50px'
-
-        text_size = '50px'
-        if len(dataframe['text'][i]) > 180:
-            text_size = '35px'
-        
-        img_src = ''
-        if type(dataframe['image'][i]) in [str]:
-            img_src = dataframe['image'][i]
-            img_style = '''    float: %s;
-    margin-%s: 20px;
-    margin-top: 20px;'''%(dataframe['image_pos'][i], dataframe['image_pos'][i])
-        else:
-            img_style = 'display: none'
-
-        css = generate_css(dataframe['border_colour'][i], dataframe['title_colour'][i], dataframe['text_colour'][i], title_size, text_size, img_style)
-        with open('static/tmp.css', 'w') as fp:
+        handle_blur(css_config)
+        css = generate_css(css_config)
+        with open('tmp.css', 'w') as fp:
             fp.write(css)
 
-        imgkit.from_file('static/tmp.html', 'out%d.jpg'%(i))
-        # imgkit.from_file('static/templates_design/0/index.html', 'out%d.jpg'%(0))
+        imgkit.from_file('tmp.html', f'out{i}.jpg')
 
+        # clean up
+        os.remove('tmp.html')
+        os.remove('tmp.css')
+        if os.path.exists('tmp_inner_image_blur.jpg'):
+            os.remove('tmp_inner_image_blur.jpg')
+        if os.path.exists('tmp_outer_image_blur.jpg'):
+            os.remove('tmp_outer_image_blur.jpg')
 
 if __name__ == '__main__':
-    generate_definitions('in.csv')
-    import os
-    os.remove("static/tmp.html")
-    os.remove("static/tmp.css")
+    generate_definitions("tmp.csv")

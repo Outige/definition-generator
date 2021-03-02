@@ -16,11 +16,11 @@ body {
     padding: 0;
     display: inline-block;
     background: url( {{ css_config.outer_image }} ) center fixed;
-
 }
 
 #inner-container {
-    border: 4px solid {{ css_config.border_colour }};
+    border: {{ css_config.border_width }}px solid {{ css_config.border_colour }};
+    border-radius: {{ css_config.border_radius }}px;
     background-color: white;
     width: 800px;
     height: 800px;
@@ -28,6 +28,10 @@ body {
     position: relative;
     top: 10%;
     background: url( {{ css_config.inner_image }} ) center fixed;
+
+    {% if css_config.inner_gradient_direction and css_config.inner_gradient_start_colour and css_config.inner_gradient_end_colour %}
+    background-image: linear-gradient( {{ css_config.inner_gradient_direction }}, {{ css_config.inner_gradient_start_colour }}, {{ css_config.inner_gradient_end_colour }} );
+    {% endif %}
 }
 
 .title {
@@ -73,8 +77,8 @@ img {
 {% else %}
     width: 250px;
     height: 250px;
-    float: {{css_config.image.position}};
-    margin-{{css_config.image.position}}: 20px;
+    float: {{css_config.image_position}};
+    margin-{{css_config.image_position}}: 20px;
     margin-top: 20px;
 {% endif %}
 }
