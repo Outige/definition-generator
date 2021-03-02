@@ -95,8 +95,8 @@ def generate_definition(dataframe, index, html_config, css_config):
 
         # FIXME should be jpg?
         imgkit.from_file('tmp.html', f'out{index}.jpg')
-        OriImage = Image.open(f'out{index}.jpg')
-        OriImage.show()
+        # OriImage = Image.open(f'out{index}.jpg')
+        # OriImage.show()
 
         # clean up
         os.remove('tmp.html')
@@ -113,6 +113,9 @@ def generate_definitions(csv_path):
 
     for i in range(len(dataframe)):
         generate_definition(dataframe, i, html_config, css_config)
+
+def foo():
+    print('foo')
 
 if __name__ == '__main__':
     generate_definitions("tmp.csv")
