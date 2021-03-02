@@ -1,5 +1,6 @@
 from jinja2 import Template
 import imgkit
+from PIL import Image, ImageFilter
 import pandas as pd 
 import math
 import os
@@ -20,11 +21,28 @@ def generate_css(css_config):
         )
         return s
 
+def handle_blur(css_config):
+    if css_config.get('inner_image_blur', False):
+        base_image = Image.open('static/' + css_config['inner_image'])
+        blur_image = base_image.filter(ImageFilter.GaussianBlur(css_config['inner_image_blur']))
+
+        css_config['inner_image'] = 'tmp_inner_image_blur.' + css_config['inner_image'].split('.')[-1]
+        blur_image.save('static/' + css_config['inner_image'])
+
+    if css_config.get('outer_image_blur', False):
+        base_image = Image.open('static/' + css_config['outer_image'])
+        blur_image = base_image.filter(ImageFilter.GaussianBlur(css_config['outer_image_blur']))
+
+        css_config['outer_image'] = 'tmp_outer_image_blur.' + css_config['outer_image'].split('.')[-1]
+        blur_image.save('static/' + css_config['outer_image'])
+
+
 def generate_definitions(html_config, css_config):
     html = generate_html(html_config)
     with open('static/tmp.html', 'w') as fp:
         fp.write(html)
 
+    handle_blur(css_config)
     css = generate_css(css_config)
     with open('static/tmp.css', 'w') as fp:
         fp.write(css)
@@ -53,7 +71,11 @@ if __name__ == '__main__':
         'title_size': 80,
         'border_colour': '#0097a7',
         'title_colour': '#696b6e',
-        'text_colour': '#0097a7'
+        'text_colour': '#0097a7',
+        'outer_image': 'images/sitebgw3.jpg',
+        'outer_image_blur': 10,
+        'inner_image': 'images/sitebgw3.jpg',
+        'inner_image_blur': 0,
     }
 
     generate_definitions(html_config, css_config)
