@@ -2,8 +2,11 @@ from jinja2 import Template
 import imgkit
 from PIL import Image, ImageFilter
 import pandas as pd
+from numpy import int64
 import math
 import os
+import json
+import sys
 
 def generate_html(html_config):
     with open('static/templates_auto/0/index.html', 'r') as fp:
@@ -81,9 +84,21 @@ def update_css_config(dataframe, index, css_config):
     if len(dataframe['title'][index]) < 13:
         css_config['title_size'] = 80
 
-def generate_definition(dataframe, index, html_config, css_config):
-        update_html_config(dataframe, index, html_config)
-        update_css_config(dataframe, index, css_config)
+def save_definition_config(dataframe, index):
+        parsed_json = pd.Series.to_dict(dataframe.iloc[index])
+        # print(parsed_json)
+        for key in parsed_json.keys():
+            if type(parsed_json[key]) in [int64]:
+                parsed_json[key] = int(parsed_json[key])
+            if pd.isnull(parsed_json[key]):
+                parsed_json[key] = None
+        # print(json.dumps(parsed_json, indent=4, sort_keys=True))
+        with open(f'output/out{index}.json', 'w') as fp:
+            pass
+            # fp.write(json.dumps(parsed_json, indent=4, sort_keys=True))
+            json.dump(parsed_json, fp, indent=4)
+
+def generate_definition(html_config, css_config, out_file):
         html = generate_html(html_config)
         with open('tmp.html', 'w') as fp:
             fp.write(html)
@@ -94,9 +109,9 @@ def generate_definition(dataframe, index, html_config, css_config):
             fp.write(css)
 
         # FIXME should be jpg?
-        imgkit.from_file('tmp.html', f'out{index}.jpg')
-        # OriImage = Image.open(f'out{index}.jpg')
-        # OriImage.show()
+        # print(pd.Series.to_json(dataframe.iloc[index]))
+        print(out_file)
+        imgkit.from_file('tmp.html', out_file)
 
         # clean up
         os.remove('tmp.html')
@@ -109,13 +124,22 @@ def generate_definition(dataframe, index, html_config, css_config):
 def generate_definitions(csv_path):
     html_config = {}
     css_config = {}
-    dataframe = pd.read_csv(csv_path)
 
+    dataframe = pd.read_csv(csv_path)
     for i in range(len(dataframe)):
-        generate_definition(dataframe, i, html_config, css_config)
+        update_html_config(dataframe, i, html_config)
+        update_css_config(dataframe, i, css_config)
+        generate_definition(html_config, css_config, f'output/out{i}.jpg')
+        save_definition_config(dataframe, i)
 
 def foo():
     print('foo')
 
 if __name__ == '__main__':
-    generate_definitions("tmp.csv")
+    if sys.argv[1].split('.')[-1] == 'csv':
+        generate_definitions(sys.argv[1])
+    if sys.argv[1].split('.')[-1] == 'json':
+        with open(sys.argv[1]) as fp:
+            parsed_json = json.load(fp)
+            print(parsed_json)
+            generate_definition(html_config=parsed_json, css_config=parsed_json, out_file=sys.argv[1].replace('.json', '.jpg'))

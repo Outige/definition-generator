@@ -72,7 +72,7 @@ h6 {
         top: -160px;
     {% else %}
         position: relative;
-        top: -100px;
+        top: -140px;
     {% endif %}
     
 }
@@ -102,6 +102,6 @@ img {
     height: 250px;
     float: {{css_config.image_position}};
     margin-{{css_config.image_position}}: 20px;
-    margin-top: 20px;
+    margin-top: 200px;
 {% endif %}
 }
