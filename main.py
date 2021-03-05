@@ -49,6 +49,18 @@ def update_html_config(dataframe, index, html_config):
     html_config['tag'] = dataframe['tag'][index]
     html_config['css'] = 'tmp.css'
 
+def update_css_text_size(css_config, len_text, len_title):
+    css_config['text_size'] = 55#int(10000*(len(dataframe['text'][index])/350)/len(dataframe['text'][index])) # TODO needs to be calculated
+    css_config['text_size'] -= int((len_text -100) / 20)*1.7 #TODO if less than 100
+    css_config['text_size'] = max(css_config['text_size'], 15)
+    if len_text < 100:
+        css_config['text_size'] = 55
+    css_config['title_size'] = 80
+    css_config['title_size'] -= int((len_title -12) / 2)*3
+    css_config['title_size'] = max(css_config['title_size'], 15)
+    if len_title < 13:
+        css_config['title_size'] = 80
+
 def update_css_config(dataframe, index, css_config):
     css_config['image_position'] = dataframe['image_position'][index]
     css_config['border_colour'] = dataframe['border_colour'][index]
@@ -73,16 +85,17 @@ def update_css_config(dataframe, index, css_config):
     css_config['source_colour'] = dataframe['source_colour'][index]
 
     # title and text dynamic resizing
-    css_config['text_size'] = 55#int(10000*(len(dataframe['text'][index])/350)/len(dataframe['text'][index])) # TODO needs to be calculated
-    css_config['text_size'] -= int((len(dataframe['text'][index]) -100) / 20)*1.7 #TODO if less than 100
-    css_config['text_size'] = max(css_config['text_size'], 15)
-    if len(dataframe['text'][index]) < 100:
-        css_config['text_size'] = 55
-    css_config['title_size'] = 80
-    css_config['title_size'] -= int((len(dataframe['title'][index]) -12) / 2)*3
-    css_config['title_size'] = max(css_config['title_size'], 15)
-    if len(dataframe['title'][index]) < 13:
-        css_config['title_size'] = 80
+    update_css_text_size(css_config, len(dataframe['text'][index]), len(dataframe['title'][index]))
+    # css_config['text_size'] = 55#int(10000*(len(dataframe['text'][index])/350)/len(dataframe['text'][index])) # TODO needs to be calculated
+    # css_config['text_size'] -= int((len(dataframe['text'][index]) -100) / 20)*1.7 #TODO if less than 100
+    # css_config['text_size'] = max(css_config['text_size'], 15)
+    # if len(dataframe['text'][index]) < 100:
+    #     css_config['text_size'] = 55
+    # css_config['title_size'] = 80
+    # css_config['title_size'] -= int((len(dataframe['title'][index]) -12) / 2)*3
+    # css_config['title_size'] = max(css_config['title_size'], 15)
+    # if len(dataframe['title'][index]) < 13:
+    #     css_config['title_size'] = 80
 
 def save_definition_config(dataframe, index):
         parsed_json = pd.Series.to_dict(dataframe.iloc[index])
@@ -141,5 +154,8 @@ if __name__ == '__main__':
     if sys.argv[1].split('.')[-1] == 'json':
         with open(sys.argv[1]) as fp:
             parsed_json = json.load(fp)
-            print(parsed_json)
+            parsed_json['css'] ='tmp.css'
+            css_config = parsed_json
+            html_config = parsed_json
+            update_css_text_size(css_config, len(css_config['text']), len(css_config['title']))
             generate_definition(html_config=parsed_json, css_config=parsed_json, out_file=sys.argv[1].replace('.json', '.jpg'))
