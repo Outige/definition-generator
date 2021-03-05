@@ -3,6 +3,7 @@
 *.jpg
 static/images
 output/
+goodies/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
