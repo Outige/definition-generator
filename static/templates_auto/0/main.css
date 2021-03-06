@@ -16,59 +16,59 @@ body {
     margin: 0;
     padding: 0;
     display: inline-block;
-    background: url( {{ css_config.outer_image }} ) center fixed;
+    background: url( {{ template_config.outer_image }} ) center fixed;
 }
 
 #inner-container {
-    border: {{ css_config.border_width }}px solid {{ css_config.border_colour }};
-    border-radius: {{ css_config.border_radius }}px;
+    border: {{ template_config.border_width }}px solid {{ template_config.border_colour }};
+    border-radius: {{ template_config.border_radius }}px;
     background-color: white;
     width: 800px;
     height: 800px;
     margin: auto auto;
     position: relative;
     top: 10%;
-    background: url( {{ css_config.inner_image }} ) center fixed;
+    background: url( {{ template_config.inner_image }} ) center fixed;
 
-    {% if css_config.shadow_size and css_config.shadow_rgba %}
-    box-shadow: 0px 0px {{ css_config.shadow_size }}px 0px rgba( {{ css_config.shadow_rgba }} );
+    {% if template_config.shadow_size and template_config.shadow_rgba %}
+    box-shadow: 0px 0px {{ template_config.shadow_size }}px 0px rgba( {{ template_config.shadow_rgba }} );
     {% endif %}
 
-    {% if css_config.inner_gradient_direction and css_config.inner_gradient_start_colour and css_config.inner_gradient_end_colour %}
-    background-image: linear-gradient( {{ css_config.inner_gradient_direction }}, {{ css_config.inner_gradient_start_colour }}, {{ css_config.inner_gradient_end_colour }} );
+    {% if template_config.inner_gradient_direction and template_config.inner_gradient_start_colour and template_config.inner_gradient_end_colour %}
+    background-image: linear-gradient( {{ template_config.inner_gradient_direction }}, {{ template_config.inner_gradient_start_colour }}, {{ template_config.inner_gradient_end_colour }} );
     {% endif %}
 }
 
 .title {
-    color: {{ css_config.title_colour }};
-    font-size: {{ css_config.title_size }}px;
+    color: {{ template_config.title_colour }};
+    font-size: {{ template_config.title_size }}px;
 }
 
 p {
-    color: {{ css_config.text_colour }};
-    font-size: {{ css_config.text_size }}px;
+    color: {{ template_config.text_colour }};
+    font-size: {{ template_config.text_size }}px;
     padding: 0 100px;
 }
 
 /* tag */
 h6 {
-    {% if css_config.border_width %}
+    {% if template_config.border_width %}
         position: relative;
-        top: {{ -124 - css_config.border_width }}px;
+        top: {{ -124 - template_config.border_width }}px;
         font-size: 20px;
         text-align: right;
-        color: {{ css_config.tag_colour }};
+        color: {{ template_config.tag_colour }};
     {% else %}
         position: relative;
         top: -95px;
         font-size: 20px;
         text-align: right;
-        color: {{ css_config.tag_colour }};
+        color: {{ template_config.tag_colour }};
     {% endif %}
 }
 
 .inner-inner {
-    {% if css_config.border_width %}
+    {% if template_config.border_width %}
         position: relative;
         top: -160px;
     {% else %}
@@ -79,29 +79,29 @@ h6 {
 
 /* source */
 h5 {
-    {% if css_config.border_width %}
+    {% if template_config.border_width %}
         text-align: left;
         font-size: 19px;
         position: relative;
-        top: {{ 766 + css_config.border_width }}px;
-        color: {{ css_config.source_colour }};
+        top: {{ 766 + template_config.border_width }}px;
+        color: {{ template_config.source_colour }};
     {% else %}
         text-align: left;
         font-size: 19px;
         position: relative;
         top: 800px;
-        color: {{ css_config.source_colour }};
+        color: {{ template_config.source_colour }};
     {% endif %}
 }
 
 img {
-{% if css_config.image == None %}
+{% if template_config.image == None %}
     display: none;
 {% else %}
     width: 250px;
     height: 250px;
-    float: {{css_config.image_position}};
-    margin-{{css_config.image_position}}: 20px;
+    float: {{template_config.image_position}};
+    margin-{{template_config.image_position}}: 20px;
     margin-top: 20px;
 {% endif %}
 }
