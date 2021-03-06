@@ -29,14 +29,15 @@ def handle_blur(template_config):
         base_image = Image.open(template_config['inner_image'])
         blur_image = base_image.filter(ImageFilter.GaussianBlur(template_config['inner_image_blur']))
 
-        template_config['inner_image'] = 'tmp_inner_image_blur.' + template_config['inner_image'].split('.')[-1]
+        template_config['tmp_inner_image'] = template_config['inner_image']
+        template_config['inner_image'] = 'tmp_inner_image_blur.png'# + template_config['inner_image'].split('.')[-1]
         blur_image.save(template_config['inner_image'])
 
     if template_config.get('outer_image', False) != '#' and template_config.get('outer_image_blur', False):
         base_image = Image.open(template_config['outer_image'])
         blur_image = base_image.filter(ImageFilter.GaussianBlur(template_config['outer_image_blur']))
 
-        template_config['outer_image'] = 'tmp_outer_image_blur.' + template_config['outer_image'].split('.')[-1]
+        template_config['outer_image'] = 'tmp_outer_image_blur.png'# + template_config['outer_image'].split('.')[-1]
         blur_image.save(template_config['outer_image'])
 
 def update_css_text_size(template_config, len_text, len_title):
@@ -102,6 +103,14 @@ def generate_definition(template_config, out_file):
         # create the definition image and save to out_file
         imgkit.from_file('tmp.html', out_file)
 
+        # replacing the blury image path with the original image path
+        if template_config.get('tmp_inner_image', None):
+            template_config['inner_image'] = template_config['tmp_inner_image']
+            template_config.pop('tmp_inner_image', None)
+        if template_config.get('tmp_outer_image', None):
+            template_config['outer_image'] = template_config['tmp_outer_image']
+            template_config.pop('tmp_outer_image', None)
+
         # save the template_config inside of metadata on the generated definition
         secret = lsb.hide(out_file, str(template_config))
         secret.save(out_file)
@@ -115,8 +124,7 @@ def generate_definition(template_config, out_file):
             os.remove('tmp_outer_image_blur.png')
 
 def get_image_config(image_path):
-    hidden_message = json.loads(lsb.reveal(image_path).replace('\'', '\"').replace('None', 'null'))
-    # hidden_message = lsb.reveal(image_path)
+    hidden_message = json.loads(lsb.reveal(image_path).replace('\'', '\"').replace(': None,', ': null,').replace(': nan,', ': null,'))
     with open('template_config.json', 'w') as fp:
         json.dump(hidden_message, fp, indent=4)
 
