@@ -6,6 +6,7 @@ from numpy import int64
 import math
 import os
 import json
+from stegano import lsb
 
 def generate_html(template_config):
     with open('static/templates_auto/0/index.html', 'r') as fp:
@@ -81,17 +82,6 @@ def update_template_config(dataframe, index, template_config):
     template_config['source'] = dataframe['source'][index]
     template_config['tag'] = dataframe['tag'][index]
 
-def save_definition_config(dataframe, index):
-        parsed_json = pd.Series.to_dict(dataframe.iloc[index])
-        for key in parsed_json.keys():
-            if type(parsed_json[key]) in [int64]:
-                parsed_json[key] = int(parsed_json[key])
-            if pd.isnull(parsed_json[key]):
-                parsed_json[key] = None
-        with open(f'output/out{index}.json', 'w') as fp:
-            pass
-            json.dump(parsed_json, fp, indent=4)
-
 def generate_definition(template_config, out_file):
         # automatically resieze the text and title, based on length
         update_css_text_size(template_config, len(template_config['text']), len(template_config['title']))
@@ -112,13 +102,23 @@ def generate_definition(template_config, out_file):
         # create the definition image and save to out_file
         imgkit.from_file('tmp.html', out_file)
 
+        # save the template_config inside of metadata on the generated definition
+        secret = lsb.hide(out_file, str(template_config))
+        secret.save(out_file)
+
         # remove all the tmp files created
         os.remove('tmp.html')
         os.remove('tmp.css')
-        if os.path.exists('tmp_inner_image_blur.jpg'):
-            os.remove('tmp_inner_image_blur.jpg')
-        if os.path.exists('tmp_outer_image_blur.jpg'):
-            os.remove('tmp_outer_image_blur.jpg')
+        if os.path.exists('tmp_inner_image_blur.png'):
+            os.remove('tmp_inner_image_blur.png')
+        if os.path.exists('tmp_outer_image_blur.png'):
+            os.remove('tmp_outer_image_blur.png')
+
+def get_image_config(image_path):
+    hidden_message = json.loads(lsb.reveal(image_path).replace('\'', '\"').replace('None', 'null'))
+    # hidden_message = lsb.reveal(image_path)
+    with open('template_config.json', 'w') as fp:
+        json.dump(hidden_message, fp, indent=4)
 
 def generate_definitions(csv_path):
     # create the pointer to the template config structure
@@ -131,5 +131,4 @@ def generate_definitions(csv_path):
         update_template_config(dataframe, i, template_config)
 
         # generate definition i
-        generate_definition(template_config, f'output/out{i}.jpg')
-        save_definition_config(dataframe, i) # FIXME this will be deleted with new steg
+        generate_definition(template_config, f'output/out{i}.png')
