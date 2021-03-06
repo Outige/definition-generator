@@ -83,7 +83,7 @@ def update_template_config(dataframe, index, template_config):
     template_config['source'] = dataframe['source'][index]
     template_config['tag'] = dataframe['tag'][index]
 
-def generate_definition(template_config, out_file):
+def generate_definition_from_json(template_config, out_file):
         # automatically resieze the text and title, based on length
         update_css_text_size(template_config, len(template_config['text']), len(template_config['title']))
 
@@ -125,18 +125,28 @@ def generate_definition(template_config, out_file):
 
 def get_image_config(image_path):
     hidden_message = json.loads(lsb.reveal(image_path).replace('\'', '\"').replace(': None,', ': null,').replace(': nan,', ': null,'))
-    with open('template_config.json', 'w') as fp:
-        json.dump(hidden_message, fp, indent=4)
+    return hidden_message
 
-def generate_definitions(csv_path):
+def generate_definitions_from_csv(csv_path, list_of_indexes=None):
     # create the pointer to the template config structure
     template_config = {}
 
     # read the csv into a dataframe and generate an image from each row
     dataframe = pd.read_csv(csv_path)
-    for i in range(len(dataframe)):
-        # populate template_config with the image settings of csv row i
-        update_template_config(dataframe, i, template_config)
 
-        # generate definition i
-        generate_definition(template_config, f'output/out{i}.png')
+    if list_of_indexes:
+        # generate all the definitions selected
+        for i in list_of_indexes:
+            # populate template_config with the image settings of csv row i
+            update_template_config(dataframe, int(i), template_config)
+
+            # generate definition i
+            generate_definition_from_json(template_config, f'output/out{i}.png')
+    else:
+        # generate all the definitions in the csv
+        for i in range(len(dataframe)):
+            # populate template_config with the image settings of csv row i
+            update_template_config(dataframe, i, template_config)
+
+            # generate definition i
+            generate_definition_from_json(template_config, f'output/out{i}.png')
