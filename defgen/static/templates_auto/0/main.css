@@ -1,0 +1,107 @@
+body {
+    padding: 0;
+    margin: 0;
+    background-color: white;
+    display: block;
+    width: 500px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+    border: 2px solid rgba(0, 0, 0, 1.0);
+    width: 1036px;
+    height: 1024px;
+    text-align: center;
+    background-color: white;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    background: url( {{ template_config.outer_image }} ) center fixed;
+}
+
+#inner-container {
+    border: {{ template_config.border_width }}px solid {{ template_config.border_colour }};
+    border-radius: {{ template_config.border_radius }}px;
+    background-color: white;
+    width: 800px;
+    height: 800px;
+    margin: auto auto;
+    position: relative;
+    top: 10%;
+    background: url( {{ template_config.inner_image }} ) center fixed;
+
+    {% if template_config.shadow_size and template_config.shadow_rgba %}
+    box-shadow: 0px 0px {{ template_config.shadow_size }}px 0px rgba( {{ template_config.shadow_rgba }} );
+    {% endif %}
+
+    {% if template_config.inner_gradient_direction and template_config.inner_gradient_start_colour and template_config.inner_gradient_end_colour %}
+    background-image: linear-gradient( {{ template_config.inner_gradient_direction }}, {{ template_config.inner_gradient_start_colour }}, {{ template_config.inner_gradient_end_colour }} );
+    {% endif %}
+}
+
+.title {
+    color: {{ template_config.title_colour }};
+    font-size: {{ template_config.title_size }}px;
+}
+
+p {
+    color: {{ template_config.text_colour }};
+    font-size: {{ template_config.text_size }}px;
+    padding: 0 100px;
+}
+
+/* tag */
+h6 {
+    {% if template_config.border_width %}
+        position: relative;
+        top: {{ -124 - template_config.border_width }}px;
+        font-size: 20px;
+        text-align: right;
+        color: {{ template_config.tag_colour }};
+    {% else %}
+        position: relative;
+        top: -95px;
+        font-size: 20px;
+        text-align: right;
+        color: {{ template_config.tag_colour }};
+    {% endif %}
+}
+
+.inner-inner {
+    {% if template_config.border_width %}
+        position: relative;
+        top: -160px;
+    {% else %}
+        position: relative;
+        top: -140px;
+    {% endif %}    
+}
+
+/* source */
+h5 {
+    {% if template_config.border_width %}
+        text-align: left;
+        font-size: 19px;
+        position: relative;
+        top: {{ 766 + template_config.border_width }}px;
+        color: {{ template_config.source_colour }};
+    {% else %}
+        text-align: left;
+        font-size: 19px;
+        position: relative;
+        top: 800px;
+        color: {{ template_config.source_colour }};
+    {% endif %}
+}
+
+img {
+{% if template_config.image == None %}
+    display: none;
+{% else %}
+    width: 250px;
+    height: 250px;
+    float: {{template_config.image_position}};
+    margin-{{template_config.image_position}}: 20px;
+    margin-top: 20px;
+{% endif %}
+}
