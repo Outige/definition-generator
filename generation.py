@@ -6,7 +6,6 @@ from numpy import int64
 import math
 import os
 import json
-import sys
 
 def generate_html(html_config):
     with open('static/templates_auto/0/index.html', 'r') as fp:
@@ -47,7 +46,6 @@ def update_html_config(dataframe, index, html_config):
     html_config['title'] = dataframe['title'][index]
     html_config['source'] = dataframe['source'][index]
     html_config['tag'] = dataframe['tag'][index]
-    html_config['css'] = 'tmp.css'
 
 def update_css_text_size(css_config, len_text, len_title):
     css_config['text_size'] = 55#int(10000*(len(dataframe['text'][index])/350)/len(dataframe['text'][index])) # TODO needs to be calculated
@@ -85,7 +83,7 @@ def update_css_config(dataframe, index, css_config):
     css_config['source_colour'] = dataframe['source_colour'][index]
 
     # title and text dynamic resizing
-    update_css_text_size(css_config, len(dataframe['text'][index]), len(dataframe['title'][index]))
+    # update_css_text_size(css_config, len(dataframe['text'][index]), len(dataframe['title'][index]))
     # css_config['text_size'] = 55#int(10000*(len(dataframe['text'][index])/350)/len(dataframe['text'][index])) # TODO needs to be calculated
     # css_config['text_size'] -= int((len(dataframe['text'][index]) -100) / 20)*1.7 #TODO if less than 100
     # css_config['text_size'] = max(css_config['text_size'], 15)
@@ -112,6 +110,7 @@ def save_definition_config(dataframe, index):
             json.dump(parsed_json, fp, indent=4)
 
 def generate_definition(html_config, css_config, out_file):
+        update_css_text_size(css_config, len(html_config['text']), len(html_config['title']))
         html = generate_html(html_config)
         with open('tmp.html', 'w') as fp:
             fp.write(html)
@@ -144,18 +143,3 @@ def generate_definitions(csv_path):
         update_css_config(dataframe, i, css_config)
         generate_definition(html_config, css_config, f'output/out{i}.jpg')
         save_definition_config(dataframe, i)
-
-def foo():
-    print('foo')
-
-if __name__ == '__main__':
-    if sys.argv[1].split('.')[-1] == 'csv':
-        generate_definitions(sys.argv[1])
-    if sys.argv[1].split('.')[-1] == 'json':
-        with open(sys.argv[1]) as fp:
-            parsed_json = json.load(fp)
-            parsed_json['css'] ='tmp.css'
-            css_config = parsed_json
-            html_config = parsed_json
-            update_css_text_size(css_config, len(css_config['text']), len(css_config['title']))
-            generate_definition(html_config=parsed_json, css_config=parsed_json, out_file=sys.argv[1].replace('.json', '.jpg'))
