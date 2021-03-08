@@ -10,6 +10,8 @@ defgen is able to handle 2 types of structed inputs: _CSV_ and _JSON_.
 |------------------|-------|------|--------|---------------|-------|----------------|-------------|------------------|-------------|------------------|--------------------------|-----------------------------|---------------------------|---------------|--------------|---------------|-------------|-------------|--------------|-------------|------------|-----|------|
 |                  |       |      |        |               |       |                |             |                  |             |                  |                          |                             |                           |               |              |               |             |             |              |             |            |     |      |
 
+`self description`: (optional) Some desciption of the image settings. This is a helpful column to be able to summarize the very confusing and non-human settings required to generate the desired image.
+
 ## JSON
 
 ```JSON
