@@ -4,9 +4,12 @@ from PIL import Image, ImageFilter
 import pandas as pd
 from numpy import int64
 import math
-import os
 import json
 from stegano import lsb
+
+import os
+import sys
+sys.path.insert(0, os.path.abspath('..'))
 
 def generate_html(template_config):
     with open('static/templates_auto/0/index.html', 'r') as fp:
