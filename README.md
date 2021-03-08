@@ -80,6 +80,10 @@ You can run csvs through `generate_definitions_from_csv`, either all in one or b
 
 ### Annotated output
 
+![example0](https://user-images.githubusercontent.com/41017214/110367093-e785a800-804f-11eb-9cab-9164e31254be.jpg)
+![example1](https://user-images.githubusercontent.com/41017214/110368021-210ae300-8051-11eb-947e-73c477a69543.jpg)
+
+
 ## JSON
 
 ```JSON
