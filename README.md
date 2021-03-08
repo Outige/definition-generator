@@ -1,5 +1,7 @@
-# definition-generator
-Tool to create stylish definitions from structured input
+# install
+```
+$ pip install defgen
+```
 
 # Example output
 ![out12](https://user-images.githubusercontent.com/41017214/109725016-313a4280-7bb9-11eb-91fb-8389f41eae44.jpg)

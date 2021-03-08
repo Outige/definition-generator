@@ -5,6 +5,7 @@ static/images
 output/
 goodies/
 tmp*
+images/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
