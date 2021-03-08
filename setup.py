@@ -10,7 +10,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="defgen",
-    version="0.0.6",
+    version="0.0.16",
     description="Tool to create stylish definitions from structured input",
     long_description=README,
     long_description_content_type="text/markdown",

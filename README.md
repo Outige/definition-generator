@@ -10,3 +10,9 @@ Tool to create stylish definitions from structured input
 pip install setuptools twine
 python3 setup.py sdist
 twine upload --repository-url https://upload.pypi.org/legacy/ --skip-existing dist/*
+
+How to get using static files
+Adding static files
+How to use requirements.txt
+Variable output dir
+Rm prints
