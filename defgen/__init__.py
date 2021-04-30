@@ -114,7 +114,9 @@ def generate_definition_from_json(template_config, out_file):
             fp.write(css)
 
         # create the definition image and save to out_file
-        imgkit.from_file('tmp.html', out_file)
+        options = {
+        "enable-local-file-access": ""}
+        imgkit.from_file('tmp.html', out_file,options=options)
 
         # replacing the blury image path with the original image path
         if template_config.get('tmp_inner_image', None):
@@ -142,7 +144,7 @@ def get_image_config(image_path):
 
 def generate_definitions_from_csv(csv_path, output_folder=os.getcwd(), list_of_indexes=None):
     if output_folder[-1] == '/':
-        output_folder = output_folder[:-1]        
+        output_folder = output_folder[:-1]
 
     # create the pointer to the template config structure
     template_config = {}
